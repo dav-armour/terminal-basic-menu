@@ -9,26 +9,50 @@ class Menu
   end
 
   def display_menu
-    display_header if @header
-    display_body if @body
-    display_footer if @footer
+    # Return if nothing to display
+    return unless @header || @body || @footer
+    print_line_break
+    if @header
+      display_header
+      print_line_break
+    end
+    if @body
+      display_body
+      print_line_break
+    end
+    if @footer
+      display_footer
+      print_line_break
+    end
   end
 
   def display_header
-    puts '+' + '-' * (@width - 2) + '+'
-    puts '|' + ''.center(@width - 2) + '|'
+    print_text(@header[:text], @header[:align])
+  end
+
+  def display_body
+    print_text(@body[:text], @body[:align])
+  end
+
+  def display_footer
+    print_text(@footer[:text], @footer[:align])
+  end
+
+  private
+
+  def print_text(text, align = 'center')
+    align = 'center' if align == nil
+    lines = text.split("\n")
+    max_length = lines.map(&:length).max
+    lines.each do |line|
+      puts '| ' + line.ljust(max_length).send(align, @width - 4) + ' |'
+    end
+  end
+
+  def print_line_break
     puts '+' + '-' * (@width - 2) + '+'
   end
-end
 
-def display_body
-  puts '-' * @width
-  puts '|' + ''.center(@width - 2) + '|'
-  puts '-' * @width
-end
-
-def display_footer
-  puts '-' * @width
-  puts '|' + ''.center(@width - 2) + '|'
-  puts '-' * @width
+  def word_wrap
+  end
 end
