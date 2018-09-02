@@ -54,7 +54,7 @@ class Menu
     # Check for longest line to allow for grouped alignment
     max_length = lines.map(&:length).max
     lines.each_with_index do |line, i|
-      line.prepend("#{i}) ") if choices
+      line.prepend("#{i+1}) ") if choices
       puts '| ' + line.ljust(max_length).send(align, @width) + ' |'
     end
   end
