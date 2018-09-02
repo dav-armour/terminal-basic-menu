@@ -1,8 +1,7 @@
 # Basic menu class used to create an instance of a terminal menu
 class Menu
-  attr_accessor :name, :width, :header, :body, :footer
-  def initialize(name, width = 50, header: nil, body: nil, footer: nil)
-    @name = name
+  attr_accessor :width, :header, :body, :footer
+  def initialize(width: 50, header: nil, body: nil, footer: nil)
     @width = width - 4 # adjust to allow '| ' and ' |' on each side
     @header = header
     @body = body
@@ -12,6 +11,8 @@ class Menu
   def display_menu
     # Return if nothing to display
     return unless @header || @body || @footer
+    # Change left to ljust etc.
+    align_to_method!
     print_line_break
     if @header
       display_header
@@ -88,6 +89,27 @@ class Menu
       string += "\n"
     end
     string.strip.split("\n")
+  end
+
+  def align_to_method!
+    @header[:align] = method_name(@header[:align]) if @header
+    if @body
+      @body[:align] = method_name(@body[:align])
+      @body[:choice_align] = method_name(@body[:choice_align])
+    end
+    @footer[:align] = method_name(@footer[:align]) if @footer
+  end
+
+  def method_name(input = nil)
+    return if input.nil?
+    case input
+    when 'left', 'ljust'
+      'ljust'
+    when 'right', 'rjust'
+      'rjust'
+    when 'center', 'middle'
+      'center'
+    end
   end
 
 end
