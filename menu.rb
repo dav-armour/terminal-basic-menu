@@ -41,9 +41,14 @@ class Menu
 
   private
 
-  def print_text(text, align = 'center')
-    align = 'center' if align == nil
+  def print_text(text, align)
+    # Default to center align
+    align = 'center' if align.nil?
     lines = text.split("\n")
+    # Wrap words or text that is too long
+    lines.map! { |line| word_wrap(line) }
+    lines.flatten!
+    # Check for longest line to allow for grouped alignment
     max_length = lines.map(&:length).max
     lines.each do |line|
       puts '| ' + line.ljust(max_length).send(align, @width) + ' |'
@@ -84,7 +89,7 @@ class Menu
       end
       string += "\n"
     end
-    string.strip
+    string.strip.split("\n")
   end
 
 end
