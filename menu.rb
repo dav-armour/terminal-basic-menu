@@ -33,6 +33,7 @@ class Menu
 
   def display_body
     print_text(@body[:text], @body[:align])
+    print_choices(@body[:choices], @body[:choice_align])
   end
 
   def display_footer
@@ -41,28 +42,25 @@ class Menu
 
   private
 
-  def print_text(text, align)
+  def print_text(text, align, choices: false)
     # Default to center align
     align = 'center' if align.nil?
-    lines = text.split("\n")
+    # Split for normal text not for choices
+    lines = choices ? text : text.split("\n")
     # Wrap words or text that is too long
     lines.map! { |line| word_wrap(line) }
     lines.flatten!
     # Check for longest line to allow for grouped alignment
     max_length = lines.map(&:length).max
-    lines.each do |line|
+    lines.each_with_index do |line, i|
+      line.prepend("#{i}) ") if choices
       puts '| ' + line.ljust(max_length).send(align, @width) + ' |'
     end
   end
 
-  # def print_choices(choices, align = 'center')
-  #   align = 'center' if align.nil?
-  #   lines = text.split("\n")
-  #   max_length = lines.map(&:length).max
-  #   lines.each do |line|
-  #     puts '| ' + line.ljust(max_length).send(align, @width) + ' |'
-  #   end
-  # end
+  def print_choices(choices, align)
+    print_text(choices, align, choices: true) unless choices.nil?
+  end
 
   def print_line_break
     puts '+' + '-' * (@width + 2) + '+'
