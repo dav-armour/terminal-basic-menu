@@ -1,8 +1,9 @@
 # Basic menu class used to create an instance of a terminal menu
 class Menu
+  attr_accessor :name, :width, :header, :body, :footer
   def initialize(name, width = 50, header: nil, body: nil, footer: nil)
     @name = name
-    @width = width
+    @width = width - 4 # adjust to allow '| ' and ' |' on each side
     @header = header
     @body = body
     @footer = footer
@@ -45,14 +46,45 @@ class Menu
     lines = text.split("\n")
     max_length = lines.map(&:length).max
     lines.each do |line|
-      puts '| ' + line.ljust(max_length).send(align, @width - 4) + ' |'
+      puts '| ' + line.ljust(max_length).send(align, @width) + ' |'
     end
   end
 
+  # def print_choices(choices, align = 'center')
+  #   align = 'center' if align.nil?
+  #   lines = text.split("\n")
+  #   max_length = lines.map(&:length).max
+  #   lines.each do |line|
+  #     puts '| ' + line.ljust(max_length).send(align, @width) + ' |'
+  #   end
+  # end
+
   def print_line_break
-    puts '+' + '-' * (@width - 2) + '+'
+    puts '+' + '-' * (@width + 2) + '+'
   end
 
-  def word_wrap
+  def word_wrap(text)
+    lines = text.split("\n")
+    string = ''
+    lines.each do |line|
+      space_left = @width
+      line.split.each do |word|
+        if word.length + 1 > space_left
+          string += "\n"
+          if word.length > @width
+            # Use regex to split word with newline when reaching max width
+            word = word.scan(/.{1,#{@width}}/).join("\n")
+          end
+          string += word
+          space_left = @width - word.length
+        else
+          string += " #{word}"
+          space_left -= word.length + 1
+        end
+      end
+      string += "\n"
+    end
+    string.strip
   end
+
 end
