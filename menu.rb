@@ -1,11 +1,14 @@
+require 'rainbow'
+
 # Basic menu class used to create an instance of a terminal menu
 class Menu
-  attr_accessor :width, :header, :body, :footer
-  def initialize(width: 50, header: nil, body: nil, footer: nil)
+  attr_accessor :width, :header, :body, :footer, :border_color
+  def initialize(width: 50, header: nil, body: nil, footer: nil, border_color: 0)
     @width = width - 4 # adjust to allow '| ' and ' |' on each side
     @header = header
     @body = body
     @footer = footer
+    @border_color = border_color
   end
 
   def display_menu
@@ -29,21 +32,22 @@ class Menu
   end
 
   def display_header
-    print_text(@header[:text], @header[:align])
+    print_text(@header[:text], @header[:align], @header[:color])
   end
 
   def display_body
-    print_text(@body[:text], @body[:align])
-    print_choices(@body[:choices], @body[:choice_align])
+    print_text(@body[:text], @body[:align], @body[:color])
+    print_choices(@body[:choices], @body[:choice_align], @body[:color])
   end
 
   def display_footer
-    print_text(@footer[:text], @footer[:align])
+    print_text(@footer[:text], @footer[:align], @footer[:color])
   end
 
   private
 
-  def print_text(text, align, choices: false)
+  def print_text(text, align, color, choices: false)
+    color = 0 if color.nil?
     # Default to center align
     align = 'center' if align.nil?
     # Split for normal text not for choices
@@ -54,17 +58,20 @@ class Menu
     # Check for longest line to allow for grouped alignment
     max_length = lines.map(&:length).max
     lines.each_with_index do |line, i|
-      line.prepend("#{i+1}) ") if choices
-      puts '| ' + line.ljust(max_length).send(align, @width) + ' |'
+      line.prepend("#{i + 1}) ") if choices
+      output = Rainbow('| ').fg(border_color)
+      output += Rainbow(line.ljust(max_length).send(align, @width)).fg(color)
+      output += Rainbow(' |').fg(border_color)
+      puts output
     end
   end
 
-  def print_choices(choices, align)
-    print_text(choices, align, choices: true) unless choices.nil?
+  def print_choices(choices, align, color)
+    print_text(choices, align, color, choices: true) unless choices.nil?
   end
 
   def print_line_break
-    puts '+' + '-' * (@width + 2) + '+'
+    puts Rainbow('+' + '-' * (@width + 2) + '+').color(border_color)
   end
 
   def word_wrap(text)
@@ -111,5 +118,4 @@ class Menu
       'center'
     end
   end
-
 end
