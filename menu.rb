@@ -57,6 +57,7 @@ class Menu
     lines.flatten!
     # Check for longest line to allow for grouped alignment
     max_length = lines.map(&:length).max
+    max_length += lines.count.to_s.length + 2 if choices
     lines.each_with_index do |line, i|
       line.prepend("#{i + 1}) ") if choices
       output = Rainbow('| ').fg(border_color)
