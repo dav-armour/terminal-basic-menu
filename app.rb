@@ -11,3 +11,8 @@ menu1 = Menu.new(header: header, body: body, footer: footer)
 menu1.border_color = :green
 system('clear')
 menu1.display_menu
+menu1.display_menu
+menu1.display_menu
+
+menu2 = Menu.new
+

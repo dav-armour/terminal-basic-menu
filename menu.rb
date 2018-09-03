@@ -12,6 +12,7 @@ class Menu
   end
 
   def display_menu
+
     # Return if nothing to display
     return unless @header || @body || @footer
     # Change left to ljust etc.
@@ -29,6 +30,8 @@ class Menu
       display_footer
       print_line_break
     end
+
+
   end
 
   def display_header
@@ -38,25 +41,27 @@ class Menu
   def display_body
     print_text(@body[:text], @body[:align], @body[:color])
     print_choices(@body[:choices], @body[:choice_align], @body[:color])
+
   end
 
   def display_footer
     print_text(@footer[:text], @footer[:align], @footer[:color])
   end
 
-  private
+  # private
 
   def print_text(text, align, color, choices: false)
     color = 0 if color.nil?
     # Default to center align
     align = 'center' if align.nil?
     # Split for normal text not for choices
-    lines = choices ? text : text.split("\n")
+    lines = choices ? text.dup : text.split("\n")
     # Wrap words or text that is too long
     lines.map! { |line| word_wrap(line) }
     lines.flatten!
     # Check for longest line to allow for grouped alignment
     max_length = lines.map(&:length).max
+    # Add extra length for choices '1) '
     max_length += lines.count.to_s.length + 2 if choices
     lines.each_with_index do |line, i|
       line.prepend("#{i + 1}) ") if choices
@@ -68,7 +73,8 @@ class Menu
   end
 
   def print_choices(choices, align, color)
-    print_text(choices, align, color, choices: true) unless choices.nil?
+    test = choices
+    print_text(test, align, color, choices: true) unless choices.nil?
   end
 
   def print_line_break
