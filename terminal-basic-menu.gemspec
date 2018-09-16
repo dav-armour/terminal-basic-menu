@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name        = 'terminal-basic-menu'
-  s.version     = '0.1.0'
+  s.version     = '1.0.0'
   s.date        = '2018-09-16'
   s.summary     = "A basic menu for terminal apps"
   s.description = "A simple gem used to create and display menus for terminal apps."
