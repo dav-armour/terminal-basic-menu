@@ -1,4 +1,4 @@
-require_relative 'gem/lib/menu.rb'
+require_relative 'lib/terminal-basic-menu'
 
 header_text = 'My App'
 header = { text: header_text, color: :red }
