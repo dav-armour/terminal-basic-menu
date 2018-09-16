@@ -2,17 +2,18 @@ require 'rainbow'
 
 # Basic menu class used to create an instance of a terminal menu
 class Menu
-  attr_accessor :width, :header, :body, :footer, :border_color
+  attr_accessor :width, :header, :body, :footer, :border_color, :word_wrap, :block_align
   def initialize(width: 50, header: nil, body: nil, footer: nil, border_color: 0)
     @width = width - 4 # adjust to allow '| ' and ' |' on each side
     @header = header
     @body = body
     @footer = footer
     @border_color = border_color
+    @word_wrap = true
+    @block_align = true
   end
 
   def display_menu
-
     # Return if nothing to display
     return unless @header || @body || @footer
     # Change left to ljust etc.
@@ -30,8 +31,6 @@ class Menu
       display_footer
       print_line_break
     end
-
-
   end
 
   def display_header
@@ -41,14 +40,13 @@ class Menu
   def display_body
     print_text(@body[:text], @body[:align], @body[:color])
     print_choices(@body[:choices], @body[:choice_align], @body[:color])
-
   end
 
   def display_footer
     print_text(@footer[:text], @footer[:align], @footer[:color])
   end
 
-  # private
+  private
 
   def print_text(text, align, color, choices: false)
     color = 0 if color.nil?
@@ -57,10 +55,10 @@ class Menu
     # Split for normal text not for choices
     lines = choices ? text.dup : text.split("\n")
     # Wrap words or text that is too long
-    lines.map! { |line| word_wrap(line) }
+    lines.map! { |line| word_wrap(line) } if @word_wrap
     lines.flatten!
-    # Check for longest line to allow for grouped alignment
-    max_length = lines.map(&:length).max
+    # Check for longest line to allow for grouped alignment if enabled
+    max_length = @block_align ? lines.map(&:length).max : 0
     # Add extra length for choices '1) '
     max_length += lines.count.to_s.length + 2 if choices
     lines.each_with_index do |line, i|
@@ -73,8 +71,7 @@ class Menu
   end
 
   def print_choices(choices, align, color)
-    test = choices
-    print_text(test, align, color, choices: true) unless choices.nil?
+    print_text(choices, align, color, choices: true) unless choices.nil?
   end
 
   def print_line_break
