@@ -1,4 +1,3 @@
-% cat menu.gemspec
 Gem::Specification.new do |s|
   s.name        = 'Terminal Basic Menu'
   s.version     = '0.1.0'
