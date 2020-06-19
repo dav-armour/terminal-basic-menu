@@ -1,6 +1,6 @@
 # Terminal Basic Menu
 ## Ruby Gem
-### Version 1.0.0
+### Version 1.1.0
 
 This ruby gem can be used to generate menus for use with terminal apps.
 
@@ -48,7 +48,8 @@ All options can be set using:
 menu1 = Menu.new
 menu1.attribute = new_value
 ```
-
+- output
+    - Used to set where the menu will be outputted (Default: $stdout)
 - width
     - Used to set how many characters wide (Default: 50)
 - header / body / footer

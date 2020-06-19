@@ -3,7 +3,8 @@ require 'rainbow'
 # Basic menu class used to create an instance of a terminal menu
 class Menu
   attr_accessor :width, :header, :body, :footer, :border_color, :word_wrap, :block_align
-  def initialize(width: 50, header: nil, body: nil, footer: nil, border_color: 0)
+  def initialize(output: $stdout, width: 50, header: nil, body: nil, footer: nil, border_color: 0)
+    @output = output
     @width = width - 4 # adjust to allow '| ' and ' |' on each side
     @header = header
     @body = body
@@ -66,7 +67,7 @@ class Menu
       output = Rainbow('| ').fg(border_color)
       output += Rainbow(line.ljust(max_length).send(align, @width)).fg(color)
       output += Rainbow(' |').fg(border_color)
-      puts output
+      @output.puts output
     end
   end
 
@@ -75,7 +76,7 @@ class Menu
   end
 
   def print_line_break
-    puts Rainbow('+' + '-' * (@width + 2) + '+').color(border_color)
+    @output.puts Rainbow('+' + '-' * (@width + 2) + '+').color(border_color)
   end
 
   def word_wrap(text)
